@@ -67,6 +67,14 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
+// Disable caching for API responses to prevent stale auth state
+app.use((req, res, next) => {
+  res.header("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.header("Pragma", "no-cache");
+  res.header("Expires", "0");
+  next();
+});
+
 const authManager = AuthManager.getInstance();
 const permissionManager = PermissionManager.getInstance();
 const authenticateJWT = authManager.createAuthMiddleware();
